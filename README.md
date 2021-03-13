@@ -8,8 +8,8 @@
 - Java
 
 ## 数据库知识
-
 - RDBS
+- - [MySQL](/DB/RDBS/MySQL.md)  
 - NoSQL等
 
 ## 搜索引擎知识
@@ -17,7 +17,10 @@
 - Solr
 
 ## 消息队列中间件
-[RabbitMQ](/MQ/RabbitMQ/RabbitMQ.md)
+- [RabbitMQ](/MQ/RabbitMQ/RabbitMQ.md)
+- RocketMQ
+- Kafka
+
 
 ## 前端知识
 - web前端
