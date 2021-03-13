@@ -16,6 +16,9 @@
 - Elasticsearch
 - Solr
 
+## 消息队列中间件
+[RabbitMQ](/MQ/RabbitMQ/RabbitMQ.md)
+
 ## 前端知识
 - web前端
 - iOS
@@ -24,9 +27,6 @@
 ## 计算机基础
 
 ## 操作系统、服务器以及网络
-
-## 消息队列
-[RabbitMQ](/MQ/RabbitMQ/RabbitMQ.md)
 
 ## 架构相关
 

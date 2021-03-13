@@ -3,6 +3,12 @@ RabbitMQ
 
 ## 工作原理
 
+### AMQP协议
+#### AMQP 是什么
+AMQP（Advanced Message Queuing Protocol，高级消息队列协议）是一个进程间传递异步消息的网络协议。
+RabbitMQ 便是基于AMQP协议设计的消息队列中间件
+二、AMQP模型
+
 ### 工作原理概述
 
 #### RabbitMQ的基本术语
