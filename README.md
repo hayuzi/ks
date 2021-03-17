@@ -32,6 +32,8 @@
 ## 操作系统、服务器以及网络
 
 ## 架构相关
+- 服务器软件
+- - [Nginx](/Structure/HttpServer/Nginx.md)
 
 ## 大数据
 
