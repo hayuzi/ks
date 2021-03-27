@@ -92,5 +92,36 @@ function insertionSort($arr)
 }
 
 
+/**
+ * 希尔排序是希尔（Donald Shell） 于1959年提出的一种排序算法。(基于交换)
+ * 希尔排序也是一种插入排序，它是简单插入排序经过改进之后的一个更高效的版本，也称为缩小增量排序，同时该算法是冲破O(n2）的第一批算法之一。
+ * 它与插入排序的不同之处在于，它会优先比较距离较远的元素。希尔排序又叫缩小增量排序。
+ *
+ * @param $arr
+ * @return mixed
+ */
+function shellSort($arr)
+{
+    $len = count($arr);
+    if (!$len) {
+        return $arr;
+    }
+    $gap = floor($len / 2);
+    while ($gap > 0) {
+        for ($i = $gap; $i < $len; $i++) {
+            $temp     = $arr[$i];
+            $preIndex = $i - $gap;
+            while ($preIndex >= 0 && $arr[$preIndex] > $temp) {
+                $arr[$preIndex + $gap] = $arr[$preIndex];
+                $preIndex              -= $gap;
+            }
+            $arr[$preIndex + $gap] = $temp;
+        }
+        $gap = floor($gap / 2);
+    }
+    return $arr;
+}
+
+
 $a = [1, 5, 6, 7, 8, 3, 2];
-print_r(insertionSort($a));
+print_r(shellSort($a));
