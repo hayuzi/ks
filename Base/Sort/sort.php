@@ -13,7 +13,7 @@
 function bubbleSort($arr)
 {
     $len = count($arr);
-    if (!$len) {
+    if ($len < 2) {
         return $arr;
     }
     for ($i = 0; $i < $len; $i++) {
@@ -41,7 +41,7 @@ function bubbleSort($arr)
 function selectionSort($arr)
 {
     $len = count($arr);
-    if (!$len) {
+    if ($len < 2) {
         return $arr;
     }
     for ($i = 0; $i < $len; $i++) {
@@ -72,7 +72,7 @@ function selectionSort($arr)
 function insertionSort($arr)
 {
     $len = count($arr);
-    if (!$len) {
+    if ($len < 2) {
         return $arr;
     }
     // $current = 0;
@@ -102,7 +102,7 @@ function insertionSort($arr)
 function shellSort($arr)
 {
     $len = count($arr);
-    if (!$len) {
+    if ($len < 2) {
         return $arr;
     }
     $gap = floor($len / 2);
@@ -122,8 +122,6 @@ function shellSort($arr)
 }
 
 
-
-
 /**
  * 归并排序是建立在归并操作上的一种有效的排序算法。
  * 该算法是采用分治法（Divide and Conquer）的一个非常典型的应用。
@@ -136,14 +134,40 @@ function shellSort($arr)
 function mergeSort($arr)
 {
     $len = count($arr);
-    if (!$len) {
+    if ($len < 2) {
         return $arr;
     }
-    // TODO
-    return $arr;
+    $mid   = floor($len / 2);
+    $left  = array_slice($arr, 0, $mid);
+    $right = array_slice($arr, $mid);
+    return mergeSortMerge(mergeSort($left), mergeSort($right));
+}
+
+/**
+ *
+ * @param $left
+ * @param $right
+ * @return array
+ */
+function mergeSortMerge($left, $right)
+{
+    $lenLeft  = count($left);
+    $lenRight = count($right);
+    $result   = [];
+    $m        = $n = 0;
+    for ($i = 0; $i < $lenLeft + $lenRight; $i++) {
+        if ($m >= $lenLeft)
+            $result[$i] = $right[$n++];
+        else if ($n >= $lenRight)
+            $result[$i] = $left[$m++];
+        else if ($left[$m] > $right[$n])
+            $result[$i] = $right[$n++];
+        else
+            $result[$i] = $left[$m++];
+    }
+    return $result;
 }
 
 
-
-$a = [1, 5, 6, 7, 8, 3, 2];
-print_r(shellSort($a));
+$a = [1, 5, 6, 2, 8, 4, 3];
+print_r(mergeSort($a));
