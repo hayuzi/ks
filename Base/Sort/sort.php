@@ -143,12 +143,6 @@ function mergeSort($arr)
     return mergeSortMerge(mergeSort($left), mergeSort($right));
 }
 
-/**
- *
- * @param $left
- * @param $right
- * @return array
- */
 function mergeSortMerge($left, $right)
 {
     $lenLeft  = count($left);
@@ -169,5 +163,119 @@ function mergeSortMerge($left, $right)
 }
 
 
-$a = [1, 5, 6, 2, 8, 4, 3];
-print_r(mergeSort($a));
+/**
+ * 快速排序 的基本思想：
+ * 通过一趟排序将待排记录分隔成独立的两部分，其中一部分记录的关键字均比另一部分的关键字小，
+ * 则可分别对这两部分记录继续进行排序，以达到整个序列有序。
+ *
+ * @param $arr
+ * @param $l
+ * @param $r
+ * @return mixed
+ */
+function quickSort(&$arr, $l, $r)
+{
+    $len = count($arr);
+    if ($len < 2) {
+        return $arr;
+    }
+    if ($l > $r) {
+        return $arr;
+    }
+    $mid = $arr[$l]; // 选择第一个数为key
+    $i   = $l;
+    $j   = $r;
+
+    while ($i < $j) {
+        while ($i < $j && $arr[$j] >= $mid) // 从右向左找第一个小于key的值
+            $j--;
+        if ($i < $j) {
+            $arr[$i] = $arr[$j];
+            $i++;
+        }
+        while ($i < $j && $arr[$i] < $mid)//从左向右找第一个大于key的值
+            $i++;
+        if ($i < $j) {
+            $arr[$j] = $arr[$i];
+            $j--;
+        }
+    }
+    $arr[$i] = $mid;
+
+    quickSort($arr, $l, $i - 1);
+    quickSort($arr, $i + 1, $r);
+
+    return $arr;
+}
+
+
+/**
+ * 堆排序（Heapsort） 是指利用堆这种数据结构所设计的一种排序算法。
+ * 堆积是一个近似完全二叉树的结构，并同时满足堆积的性质：
+ * 即子结点的键值或索引总是小于（或者大于）它的父节点。
+ *
+ * @param $arr
+ * @return mixed
+ */
+function heapSort(&$arr)
+{
+    $len = count($arr);
+    if ($len < 2) {
+        return $arr;
+    }
+    // 1.构建一个最大堆
+    buildMaxHeap($arr);
+    // 2.循环将堆首位（最大值）与末位交换，然后再重新调整最大堆
+    $end = $len - 1;
+    while ($end > 0) {
+        swap($arr, 0, $end);
+        $end--;
+        adjustHeap($arr, 0, $end);
+    }
+    return $arr;
+}
+
+function buildMaxHeap(&$arr)
+{
+    $len = count($arr);
+    //从最后一个非叶子节点开始向上构造最大堆
+    //for循环这样写会更好一点：i的左子树和右子树分别2i+1和2(i+1)
+    for ($i = (floor($len / 2) - 1); $i >= 0; $i--) {
+        adjustHeap($arr, $i, $len - 1);
+    }
+}
+
+function adjustHeap(&$arr, $i, $end)
+{
+    $maxIndex = $i;
+    //如果有左子树，且左子树大于父节点，则将最大指针指向左子树
+    if ($i * 2 <= $end && $arr[$i * 2] > $arr[$maxIndex])
+        $maxIndex = $i * 2;
+    // 如果有右子树，且右子树大于父节点，则将最大指针指向右子树
+    if ($i * 2 + 1 <= $end && $arr[$i * 2 + 1] > $arr[$maxIndex])
+        $maxIndex = $i * 2 + 1;
+    // 如果父节点不是最大值，则将父节点与最大值交换，并且递归调整与父节点交换的位置。
+    if ($maxIndex != $i) {
+        swap($arr, $maxIndex, $i);
+        adjustHeap($arr, $maxIndex, $end);
+    }
+}
+
+
+/**
+ * 交换数组内两个元素
+ *
+ * @param array
+ * @param $i
+ * @param $j
+ */
+function swap(&$arr, $i, $j)
+{
+    $temp    = $arr[$i];
+    $arr[$i] = $arr[$j];
+    $arr[$j] = $temp;
+}
+
+
+$a = [1, 5, 6, 2, 8, 4, 3, 9];
+print_r(heapSort($a));
