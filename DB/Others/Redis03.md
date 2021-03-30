@@ -160,8 +160,34 @@ list 结构为链表提供了表头指针 head 、表尾指针 tail ， 以及�
 
 ## 5. 字典
 
-#### Redis定义了dictEntry、dictType、dictht和dict四个结构体来实现哈希表的功能。它们具体定义如下：
-##### dictEntry结构体
+#### 字典的实现
+Redis定义了dictEntry、dictType、dictht和dict四个结构体来实现哈希表的功能。它们具体定义如下：
+
+##### dictht结构体（哈希表）
+```
+/* 哈希表结构 */
+typedef struct dictht {
+    // 哈希表数组
+    // table 属性是一个数组， 数组中的每个元素都是一个指向 dict.h/dictEntry 结构的指针， 每个 dictEntry 结构保存着一个键值对
+    dictEntry **table;
+    
+    // 散列数组的长度、哈希表大小
+    unsigned long size;
+    
+    // 哈希表大小掩码，用于计算索引值
+    // 总是等于 size - 1
+    unsigned long sizemask;
+    
+    // 散列数组中已经被使用的节点数量
+    unsigned long used;
+    
+} dictht;
+```
+
+
+##### dictEntry结构体（哈希表节点）
+
+哈希表节点使用 dictEntry 结构表示， 每个 dictEntry 结构都保存着一个键值对：
 ```
 /* 保存键值（key - value）对的结构体，类似于STL的pair。*/
 typedef struct dictEntry {
@@ -179,7 +205,28 @@ typedef struct dictEntry {
 } dictEntry;
 ```
 
-##### dictType结构体
+
+##### dict结构体（字典）
+```
+/* 字典的主操作类，对dictht结构再次包装  */
+typedef struct dict {
+    // 字典类型
+    dictType *type;
+    // 私有数据
+    void *privdata;
+    // 一个字典中有两个哈希表
+    dictht ht[2];
+    //rehash的标记，rehashidx==-1，表示没在进行rehash
+    long rehashidx; 
+    // 当前正在使用的迭代器的数量
+    int iterators; 
+} dict;
+```
+type 属性和 privdata 属性是针对不同类型的键值对， 为创建多态字典而设置的：
+- type 属性是一个指向 dictType 结构的指针， 每个 dictType 结构保存了一簇用于操作特定类型键值对的函数， Redis 会为用途不同的字典设置不同的类型特定函数。
+- 而 privdata 属性则保存了需要传给那些类型特定函数的可选参数。
+
+##### dictType结构体（类型特定）
 ```
 /* 定义了字典操作的公共方法，类似于adlist.h文件中list的定义，将对节点的公共操作方法统一定义。搞不明白为什么要命名为dictType */
 typedef struct dictType {
@@ -198,39 +245,44 @@ typedef struct dictType {
 } dictType;
 ```
 
-##### dictht结构体
+#### 字典其他相关问题
+##### 哈希算法
+
+Redis提供了三种不同的散列函数，分别是：
+- 使用Thomas Wang’s 32 bit Mix哈希算法，对一个整型进行哈希，该方法在dictIntHashFunction函数中实现。
+- 使用MurmurHash2哈希算法对字符串进行哈希，该方法在dictGenHashFunction函数中实现。(当字典被用作数据库的底层实现，或者哈希键的底层实现时，Redis用MurmurHash2算法来计算哈希值，能产生32-bit或64-bit哈希值。)
+- 在dictGenCaseHashFunction函数中提供了一种比较简单的djb哈希算法，对字符串进行哈希。（djb哈希算法，算法的思想是利用字符串中的ascii码值与一个随机seed，通过len次变换，得到最后的hash值。）
+
+##### 哈希键冲突解决
+从字典数据结构组织中可以是看出，redis采用的链地址法解决的hash键冲突
+
+
+##### rehash
+随着操作的不断执行， 哈希表保存的键值对会逐渐地增多或者减少， 为了让哈希表的负载因子（load factor）维持在一个合理的范围之内， 当哈希表保存的键值对数量太多或者太少时， 程序需要对哈希表的大小进行相应的扩展或者收缩。
+
+当以下条件中的任意一个被满足时， 程序会自动开始对哈希表执行扩展操作：
+- 服务器目前没有在执行 BGSAVE 命令或者 BGREWRITEAOF 命令， 并且哈希表的负载因子大于等于 1 ；
+- 服务器目前正在执行 BGSAVE 命令或者 BGREWRITEAOF 命令， 并且哈希表的负载因子大于等于 5 ；
+
+其中哈希表的负载因子可以通过公式：
 ```
-/* 哈希表结构 */
-typedef struct dictht {
-    // 散列数组。
-    dictEntry **table;
-    // 散列数组的长度
-    unsigned long size;
-    // sizemask等于size减1
-    unsigned long sizemask;
-    // 散列数组中已经被使用的节点数量
-    unsigned long used;
-} dictht;
+# 负载因子 = 哈希表已保存节点数量 / 哈希表大小
+load_factor = ht[0].used / ht[0].size
 ```
 
-##### dict结构体
-```
-/* 字典的主操作类，对dictht结构再次包装  */
-typedef struct dict {
-    // 字典类型
-    dictType *type;
-    // 私有数据
-    void *privdata;
-    // 一个字典中有两个哈希表
-    dictht ht[2];
-    //rehash的标记，rehashidx==-1，表示没在进行rehash
-    long rehashidx; 
-    // 当前正在使用的迭代器的数量
-    int iterators; 
-} dict;
-```
+##### 渐进式 rehash
+扩展或收缩哈希表需要将 ht[0] 里面的所有键值对 rehash 到 ht[1] 里面， 但是， 这个 rehash 动作并不是一次性、集中式地完成的， 而是分多次、渐进式地完成的。
 
-![image](https://note.youdao.com/favicon.ico)
+如果字典结构中存储的数据量太大，一次性操作可能会导致服务器在一段时间内停止服务。
+因此， 为了避免 rehash 对服务器性能造成影响， 服务器不是一次性将 ht[0] 里面的所有键值对全部 rehash 到 ht[1] ， 而是分多次、渐进式地将 ht[0] 里面的键值对慢慢地 rehash 到 ht[1] 。
+
+因为在进行渐进式 rehash 的过程中， 字典会同时使用 ht[0] 和 ht[1] 两个哈希表， 所以在渐进式 rehash 进行期间， 字典的删除（delete）、查找（find）、更新（update）等操作会在两个哈希表上进行： 比如说， 要在字典里面查找一个键的话， 程序会先在 ht[0] 里面进行查找， 如果没找到的话， 就会继续到 ht[1] 里面进行查找， 诸如此类。
+
+另外， 在渐进式 rehash 执行期间， 新添加到字典的键值对一律会被保存到 ht[1] 里面， 而 ht[0] 则不再进行任何添加操作： 这一措施保证了 ht[0] 包含的键值对数量会只减不增， 并随着 rehash 操作的执行而最终变成空表。
+
+
+##### 
+
 
 参考
  - Redis设计与实现 http://redisbook.com/
