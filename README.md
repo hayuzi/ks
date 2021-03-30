@@ -11,6 +11,9 @@
 - RDBS
 - - [MySQL](/DB/RDBS/MySQL.md)  
 - NoSQL等
+- - Redis
+- - - [Redis基础数据类型](/DB/Others/Redis01.md)
+- - - [Redis底层数据结构](/DB/Others/Redis03.md)
 
 ## 搜索引擎知识
 - Elasticsearch
