@@ -301,14 +301,14 @@ function countingSort($arr)
             $min = $arr[$i];
         }
     }
-    $base = $min;
+    $base   = $min;
     $bucket = array_fill(0, $max - $min, 0);
     for ($i = 0; $i < $len; $i++) {
         $bucket[$arr[$i] - $base]++;
     }
 
     $index = $i = 0;
-    while($index < $len) {
+    while ($index < $len) {
         if ($bucket[$i] > 0) {
             $arr[$index] = $i + $base;
             $index++;
@@ -322,8 +322,75 @@ function countingSort($arr)
 }
 
 
-// TODO 桶排序、基数排序
+/**
+ * 桶排序 (Bucket sort)的工作的原理：
+ * 假设输入数据服从均匀分布，将数据分到有限数量的桶里，每个桶再分别排序
+ * （有可能再使用别的排序算法或是以递归方式继续使用桶排序进行排
+ *
+ * @param $arr
+ * @return mixed
+ */
+function bucketSort($arr)
+{
+    $len = count($arr);
+    if ($len < 2) {
+        return $arr;
+    }
+
+    // 1. 计算最大值与最小值
+    $max = PHP_INT_MIN;
+    $min = PHP_INT_MAX;
+    foreach ($arr as $v) {
+        $max = max($max, $v);
+        $min = min($min, $v);
+    }
+
+    // 2. 计算桶的数量
+    $bucketNum = floor(($max - $min) / $len) + 1;
+    $bucketArr = array_fill(0, $bucketNum, []);
+
+    // 3. 将每个元素放入桶
+    for ($i = 0; $i < $len; $i++) {
+        $num = (int)floor(($arr[$i] - $min) / $len);
+
+        print_r($num);
+
+        // 分散到桶中
+        $bucketArr[$num][] = $arr[$i];
+    }
+
+    // 4. 对每个桶进行排序
+    for ($i = 0; $i < $bucketNum; $i++) {
+        sort($bucketArr[$i]);
+    }
+
+    // 5. 将桶中的元素赋值到原序列
+    $index = 0;
+    for ($i = 0; $i < $bucketNum; $i++) {
+        for ($j = 0; $j < count($bucketArr[$i]); $j++) {
+            $arr[$index++] = $bucketArr[$i][$j];
+        }
+    }
+
+    return $arr;
+}
+
+
+/**
+ * 基数排序
+ * 也是非比较的排序算法，对每一位进行排序，从最低位开始排序，复杂度为O(kn),为数组长度，k为数组中的数的最大的位数；
+ * 基数排序是按照低位先排序，然后收集；再按照高位排序，然后再收集；依次类推，直到最高位。
+ * 有时候有些属性是有优先级顺序的，先按低优先级排序，再按高优先级排序。
+ * 最后的次序就是高优先级高的在前，高优先级相同的低优先级高的在前。
+ * 基数排序基于分别排序，分别收集，所以是稳定的
+ * @param $arr
+ */
+function radixSort($arr)
+{
+
+    $arr;
+}
 
 
 $a = [1, 5, 6, 2, 8, 4, 3, 9];
-print_r(countingSort($a));
+print_r(bucketSort($a));
