@@ -348,9 +348,6 @@ function bucketSort($arr)
     // 3. 将每个元素放入桶
     for ($i = 0; $i < $len; $i++) {
         $num = (int)floor(($arr[$i] - $min) / $len);
-
-        print_r($num);
-
         // 分散到桶中
         $bucketArr[$num][] = $arr[$i];
     }
@@ -378,6 +375,9 @@ function bucketSort($arr)
  * 基数排序是一种非比较型整数排序算法，其原理是将整数按位数切割成不同的数字，然后按每个位数分别比较。
  * 由于整数也可以表达字符串（比如名字或日期）和特定格式的浮点数，所以基数排序也不是只能使用于整数。
  *
+ * 基数排序对于正整数和0的处理，可以很方便.
+ * 先按照个位排序，然后按照十位排序，再按照百位依次进行
+ *
  * 对比： 基数排序 vs 计数排序 vs 桶排序
  *      这三种排序算法都利用了桶的概念，但对桶的使用方法上有明显差异：
  *
@@ -390,13 +390,45 @@ function bucketSort($arr)
  */
 function radixSort($arr)
 {
+    $len = count($arr);
+    if ($len < 2) {
+        return $arr;
+    }
+    // 最大数 [ 注意：该方法未考虑到负数的情况，如果有负数，需要额外处理 ]
+    $m = $maxDigit = max($arr);
+    // 求最大位数
+    $d = 1;
+    while ($m >= 10) {
+        $m = floor($m / 10);
+        $d++;
+    }
 
+    // 外层循环按照位数走
+    $tmp   = [];
+    $radix = 1;
+    for ($i = 0; $i < $d; $i++) {
 
+        // 每次分配前清空计数器 以及基数桶
+        $counter = array_fill(0, 10, 0);
+        $bucket  = array_fill(0, 10, []);
 
+        // 分散到桶
+        for ($j = 0; $j < $len; $j++) {
+            $k = floor($arr[$j] / $radix) % 10;
+            $counter[$k]++;
+            $bucket[$k][] = $arr[$j];
+        }
 
-    return $arr;
+        // 存入临时数组
+        foreach ($bucket as $item) {
+            foreach ($item as $val) {
+                $tmp[] = $val;
+            }
+        }
+    }
+    return $tmp;
 }
 
 
 $a = [1, 5, 6, 2, 8, 4, 3, 9];
-print_r(bucketSort($a));
+print_r(radixSort($a));
