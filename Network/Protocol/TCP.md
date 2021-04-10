@@ -1,9 +1,9 @@
 TCP协议
 ==
 
-## 三次握手
-> 可以参看文章 https://zhuanlan.zhihu.com/p/199284611
+> 参看文章 https://zhuanlan.zhihu.com/p/199284611
 
+## 三次握手
 
 #### 建立连接初始化的目标
 - 分配资源
