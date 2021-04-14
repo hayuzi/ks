@@ -14,7 +14,6 @@ Process提供了比pcntl更强大的功能
 - 协程环境中无法使用 Process模块，可以runtime hook + proc_open实现
 
 
-
 ## SERVER 运行的两种模式
 
 #### SWOOLE_RPOCESS（ 进程模式 ）
@@ -22,15 +21,47 @@ Process提供了比pcntl更强大的功能
 
 优点：
 - 连接与数据请求发送分离
-- Worker进程发送知名错误，连接不会被切断
+- Worker进程发生致命错误，连接不会被切断
 - 可以实现单连接并发，仅保持少量TCP连接，请求可以并发地在多个Worker进程中处理
 
 缺点：
 - 存在2次IPC的开销，Master进程与worker进程需要使用unixSocket进行通信
 
 ##### 该模式下进程关系
+REACTOR模型
+在进程模式中，系统采用MainReactor线程监听accept，线程将出现的问题抛给Worker进程进行处理，这样即使单个Worker进程挂掉也不会对系统产生任何的影响。
+
+```
+Master进程
+|
+|---- Master线程 （ Reactor对象*N（Epoll/Kqueue））
+|       |---- Accept
+|       |---- 信号处理
+|       |---- 定时器任务
+|       |---- 业务逻辑
+|---- Reactor线程（ 维护TCP连接、处理IO、处理协议、收发数据，不执行任何PHP代码 ）
+|       |---- Receive
+|       |---- Sendto 
+|       |---- Close
+|       |---- Buffer
+|       |---- Dispatch
+|---- 心跳检测线程
+
+Manager进程（负责创建 / 回收 worker/task 进程）
+|
+|---- Workder进程（ 接受由 Reactor 线程投递的请求数据包，并执行 PHP 回调函数处理数据。生成响应数据并发给 Reactor 线程，由 Reactor 线程发送给 TCP 客户端）
+|       |---- 事件回调（ onXXX ）
+|       |---- 接收数据
+|       |---- 发送数据
+|       |---- 定时器任务
+|       |---- 业务逻辑
+|---- TaskWorker进程
+|       |---- 事件回调（onTask）
 
 
+Reactor 和 Worker 间通过 unixSocket 进行通信。
+
+```
 
 #### SWOOLE_BASE （ 基础模式 ）
 SWOOLE_BASE 这种模式就是传统的异步非阻塞 Server。
