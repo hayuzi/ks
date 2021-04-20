@@ -1,6 +1,8 @@
 Nginx
-
 ==
+
+> Nginx的一些介绍的参考 https://zhuanlan.zhihu.com/p/108031600
+> epoll  
 
 ## Nginx的进程模型
 - 多进程：一个 Master 进程、多个 Worker 进程
@@ -13,6 +15,17 @@ Nginx
 - - Worker 进程数量：在 nginx.conf 中配置，一般设置为核心数，充分利用 CPU 资源，同时，避免进程数量过多，避免进程竞争 CPU 资源，增加上下文切换的损耗。
 
 ## 工作原理
+
+#### HTTP连接建立和请求处理过程
+- Nginx 启动时，Master 进程，加载配置文件
+- Master 进程，初始化监听的 socket
+- Master 进程，fork 出多个 Worker 进程
+- Worker 进程，竞争新的连接，获胜方通过三次握手，建立 Socket 连接，并处理请求
+
+#### Nginx的惊群效应与解决
+Master进程与Worker进程之间的关系以及socket连接分布的问题
+
+
 
 ## 基于epoll的I/O多路复用机制
 Nginx使用了基于epoll的I/O多路复用机制
