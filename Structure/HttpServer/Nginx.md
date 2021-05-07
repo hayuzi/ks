@@ -2,7 +2,7 @@ Nginx
 ==
 
 > Nginx的一些介绍的参考 https://zhuanlan.zhihu.com/p/108031600
-> epoll  
+> epoll原理解释  https://zhuanlan.zhihu.com/p/63179839
 
 ## Nginx的进程模型
 - 多进程：一个 Master 进程、多个 Worker 进程
