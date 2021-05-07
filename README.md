@@ -3,8 +3,8 @@
 > 这是一个知识体系梳理的项目，用来给自己的知识以及学习做一个提纲.
 
 ## 服务端开发语言
-- PHP
-- Golang
+- [PHP](/Language/PHP/README.md)
+- [Golang](/Language/Golang/README.md)
 - Java
 
 ## 数据库知识
