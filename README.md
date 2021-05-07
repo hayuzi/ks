@@ -40,6 +40,8 @@
 - - [UDP](/Network/Protocol/UDP.md)
 
 ## 架构相关
+- 分布式
+- - [分布式事务处理方案](/Structure/Distributed/Trainsaction.md)
 - 服务器软件
 - - [Nginx](/Structure/HttpServer/Nginx.md)
 

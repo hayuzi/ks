@@ -23,6 +23,9 @@ Nginx
 - Worker 进程，竞争新的连接，获胜方通过三次握手，建立 Socket 连接，并处理请求
 
 #### Nginx的惊群效应与解决
+老版本的 Worker 竞争socket连接的方式，存在惊群效应的问题
+
+- 待完善
 Master进程与Worker进程之间的关系以及socket连接分布的问题
 
 
