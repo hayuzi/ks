@@ -9,7 +9,7 @@
 
 ## 数据库知识
 - RDBS
-- - [MySQL](/DB/RDBS/MySQL.md)  
+- - [MySQL](/DB/RDBS/MySQL01.md)  
 - NoSQL等
 - - Redis
 - - - [Redis基础数据类型](/DB/Others/Redis01.md)
