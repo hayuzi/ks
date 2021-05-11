@@ -3,7 +3,8 @@ PHP知识提纲
 
 ## 语言基础（手册相关）
 - 安装/模块
-- - 该部分内容可以通过访问PHP官方手册来学习 [官方手册](https://www.php.net/manual/zh/index.php)
+- - 该部分内容可以通过访问PHP官方手册来学习
+- - [官方手册](https://www.php.net/manual/zh/index.php)
 - PHP运行模型（多进程/cli/fpm/协程/swoole）
 - - cli
 - - php-fpm 下面讲
