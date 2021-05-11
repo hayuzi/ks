@@ -42,6 +42,8 @@
 
 ## 架构相关
 - 分布式
+- - [分布式共识算法](/Structure/Distributed/Consensus.md)
+- - [分布式唯一ID生成算法](/Structure/Distributed/ID.md)
 - - [分布式事务处理方案](/Structure/Distributed/Trainsaction.md)
 - 服务器软件
 - - [Nginx](/Structure/HttpServer/Nginx.md)
