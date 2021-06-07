@@ -1,4 +1,6 @@
-# KnowledgeSystem
+# ks
+
+knowledge system
 
 > 这是一个知识体系梳理的项目，用来给自己的知识以及学习做一个提纲.
 
