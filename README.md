@@ -4,19 +4,20 @@ knowledge system
 
 > 这是一个知识体系梳理的项目，用来给自己的知识以及学习做一个提纲.
 
-## 服务端开发语言
+## 1. 服务端开发语言
 - [PHP](/Language/PHP/README.md)
 - [Golang](/Language/Golang/README.md)
 - Java
 
 ## 数据库知识
-- RDBS
-- - [MySQL](/DB/RDBS/MySQL01.md)  
-- NoSQL等
-- - Redis
-- - - [Redis基础数据类型](/DB/Others/Redis01.md)
-- - - [Redis底层数据结构](/DB/Others/Redis02.md)
-- - - [Redis底层设计](/DB/Others/Redis03.md)
+### 关系型数据库 RDBS
+- [MySQL](/DB/RDBS/MySQL01.md)  
+
+### NoSQL
+- Redis
+- - [Redis基础数据类型](/DB/Others/Redis01.md)
+- - [Redis底层数据结构](/DB/Others/Redis02.md)
+- - [Redis底层设计](/DB/Others/Redis03.md)
 
 ## 搜索引擎知识
 - Elasticsearch
@@ -49,6 +50,21 @@ knowledge system
 - - [分布式事务处理方案](/Structure/Distributed/Trainsaction.md)
 - 服务器软件
 - - [Nginx](/Structure/HttpServer/Nginx.md)
+
+
+## 微服务
+DDD领域驱动设计
+
+微服务业务架构
+- 服务注册服务发现
+- 服务熔断与降级
+- 服务限流
+- 配置中心
+- 调用链追踪
+- 服务监控
+ 
+容器化与k8s等
+
 
 ## 大数据
 
