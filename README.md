@@ -15,10 +15,11 @@ knowledge system
 
 ### NoSQL
 - Redis
-- - [Redis基础数据类型](/DB/Others/Redis01.md)
+- - [Redis基础数据类型与事务](/DB/Others/Redis01.md)
 - - [Redis底层数据结构](/DB/Others/Redis02.md)
 - - [Redis对象--基础类型与结构组织](/DB/Others/Redis03.md)
-- - [Redis底层设计](/DB/Others/Redis04.md)
+- - [Redis持久化与数据过期策略](/DB/Others/Redis04.md)
+- - [Redis实践问题](/DB/Others/Redis05.md) 
 
 ## 搜索引擎知识
 - Elasticsearch
