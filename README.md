@@ -17,7 +17,8 @@ knowledge system
 - Redis
 - - [Redis基础数据类型](/DB/Others/Redis01.md)
 - - [Redis底层数据结构](/DB/Others/Redis02.md)
-- - [Redis底层设计](/DB/Others/Redis03.md)
+- - [Redis对象--基础类型与结构组织](/DB/Others/Redis03.md)
+- - [Redis底层设计](/DB/Others/Redis04.md)
 
 ## 搜索引擎知识
 - Elasticsearch
@@ -51,10 +52,7 @@ knowledge system
 - 服务器软件
 - - [Nginx](/Structure/HttpServer/Nginx.md)
 
-
 ## 微服务
-DDD领域驱动设计
-
 微服务业务架构
 - 服务注册服务发现
 - 服务熔断与降级
@@ -62,9 +60,10 @@ DDD领域驱动设计
 - 配置中心
 - 调用链追踪
 - 服务监控
- 
+
 容器化与k8s等
 
+DDD领域驱动设计
 
 ## 大数据
 
