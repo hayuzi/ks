@@ -20,7 +20,8 @@ knowledge system
 - - [Redis对象--基础类型与结构组织](/DB/Others/Redis03.md)
 - - [Redis持久化与数据过期策略](/DB/Others/Redis04.md)
 - - [Redis实践问题](/DB/Others/Redis05.md) 
-- - [Redis内存模型](/DB/Others/Redis06.md)
+- - [Redis文件事件](/DB/Others/Redis06.md)
+- - [Redis集群原理](/DB/Others/Redis07.md)
 
 ## 搜索引擎知识
 - Elasticsearch
