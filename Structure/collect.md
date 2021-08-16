@@ -4,6 +4,7 @@
 
 - 服务端相关知识体系   https://thinkwon.blog.csdn.net/article/details/104778621
 - 服务端相关知识体系2  https://doocs.github.io/advanced-java
+- redis设计与实现     Redis设计与实现 (建议直接浏览)  http://redisbook.com/
 - go语言groutine     https://mp.weixin.qq.com/s/_ngJ6QfZRK5sGTA-CfsORg
 - TCP协议     https://zhuanlan.zhihu.com/p/61987654
 - TCP协议     https://zhuanlan.zhihu.com/p/199284611
