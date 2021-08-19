@@ -1,17 +1,27 @@
-# ks
+ks
+==
 
 knowledge system
 
 > 这是一个知识体系梳理的项目，用来给自己的知识以及学习做一个提纲.
 
-## 1. 服务端开发语言
+## 1. 基础知识
+- [排序算法](/Base/Sort/README.md)
+
+
+## 2. 服务端开发语言
 - [PHP](/Language/PHP/README.md)
 - [Golang](/Language/Golang/README.md)
 - Java
 
-## 数据库知识
+## 3. 数据库知识
 ### 关系型数据库 RDBS
-- [MySQL](/DB/RDBS/MySQL01.md)  
+- MySQL
+- - [MySQL基础原理](/DB/RDBS/MySQL01.md)
+- - [MySQL主从远原理与维护](/DB/RDBS/MySQL02.md)
+- - [MySQL关联查询以及导入导出](/DB/RDBS/MySQL03.md)
+- - [MySQL分库分表](/DB/RDBS/MySQL04.md)
+- - [MySQL执行计划与查询优化](/DB/RDBS/MySQL05.md)
 
 ### NoSQL
 - Redis
@@ -23,31 +33,32 @@ knowledge system
 - - [Redis文件事件](/DB/Others/Redis06.md)
 - - [Redis集群原理](/DB/Others/Redis07.md)
 
-## 搜索引擎知识
+## 4. 搜索引擎知识
 - Elasticsearch
+- - [ES设计原理](/Search/ES/Elasticsearch01.md)
 - Solr
 
-## 消息队列中间件
+## 5. 消息队列中间件
 - [RabbitMQ](/MQ/RabbitMQ/RabbitMQ.md)
 - RocketMQ
 - Kafka
 
 
-## 前端知识
+## 6. 前端知识
 - web前端
 - iOS
 - Android
 
-## 计算机基础
+## 7. 计算机基础
 
-## 操作系统、服务器以及网络
+### 操作系统、服务器以及网络
 - 网络协议
 - - [HTTP](/Network/Protocol/HTTP.md)
 - - [HTTPS](/Network/Protocol/HTTPS.md)
 - - [TCP](/Network/Protocol/TCP.md)
 - - [UDP](/Network/Protocol/UDP.md)
 
-## 架构相关
+## 8. 架构相关
 - 分布式
 - - [分布式共识算法](/Structure/Distributed/Consensus.md)
 - - [分布式唯一ID生成算法](/Structure/Distributed/ID.md)
@@ -55,7 +66,7 @@ knowledge system
 - 服务器软件
 - - [Nginx](/Structure/HttpServer/Nginx.md)
 
-## 微服务
+## 9. 微服务
 微服务业务架构
 - 服务注册服务发现
 - 服务熔断与降级
@@ -63,10 +74,8 @@ knowledge system
 - 配置中心
 - 调用链追踪
 - 服务监控
-
-容器化与k8s等
-
-DDD领域驱动设计
+- 容器化与k8s等
+- DDD领域驱动设计
 
 ## 大数据
 

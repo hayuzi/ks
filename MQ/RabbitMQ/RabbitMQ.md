@@ -177,7 +177,7 @@ RabbitMQ的topic方式下的消息投递机制，topic下路由的 ‘#’ 与 �
 - 可以参看该文章 https://www.pianshen.com/article/5946333299/
 
 
-## 与其他MQ进行对比
+## 与其他MQ进行对比（该部分内容太老了，不太准确，等待更新）
 
 ### 维度对比
 
