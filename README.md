@@ -4,6 +4,7 @@ ks
 knowledge system
 
 > 这是一个知识体系梳理的项目，用来给自己的知识以及学习做一个提纲.
+> 另：[关于学习总结的一些思考](/think.md)
 
 ## 1. 基础知识
 - [排序算法](/Base/Sort/README.md)
