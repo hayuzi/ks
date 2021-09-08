@@ -12,4 +12,5 @@
 ![image](../image/common_algorithm.jpeg)
 
 ### 2. 以下内容依次实现各类算法
-- 差分算法
+- [前缀和算法](./go/prefix.go)
+- [差分算法](./go/difference.go)
