@@ -97,3 +97,12 @@ gcTriggerCycle：如果当前没有启动GC则开始新一轮的GC
 
 ### 参考
 - https://zhuanlan.zhihu.com/p/297177002
+
+
+
+## 2. 内存分配与逃逸分析
+
+
+### 参考文件
+- https://golang.org/doc/faq
+- https://zhuanlan.zhihu.com/p/343562181

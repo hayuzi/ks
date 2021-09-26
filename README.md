@@ -23,6 +23,9 @@ knowledge system
 - - [MySQL关联查询以及导入导出](/DB/RDBS/MySQL03.md)
 - - [MySQL分库分表](/DB/RDBS/MySQL04.md)
 - - [MySQL执行计划与查询优化](/DB/RDBS/MySQL05.md)
+    
+### 分布式关系数据库
+- TiDB、PolarDB、OceanBase等等
 
 ### NoSQL
 - Redis
@@ -33,6 +36,8 @@ knowledge system
 - - [Redis实践问题](/DB/Others/Redis05.md) 
 - - [Redis文件事件](/DB/Others/Redis06.md)
 - - [Redis集群原理](/DB/Others/Redis07.md)
+
+### 时序数据库与列存储
 
 ## 4. 搜索引擎知识
 - Elasticsearch
@@ -78,6 +83,8 @@ knowledge system
 - 容器化与k8s等
 - DDD领域驱动设计
 
-## 大数据
+## 10. 大数据
 
-## 机器学习
+## 11. 机器学习
+
+## 12. 存储相关

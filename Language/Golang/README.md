@@ -10,6 +10,9 @@ Go语言知识提纲
 - [基本语法](/Language/Golang/Go01.md)
 - [面向对象、工具、反射与低级编程](/Language/Golang/Go02.md)
 
+### go工具使用
+[go mod](/Language/Golang/gomod.md)
+
 ### 垃圾回收
 - [垃圾回收](/Language/Golang/Go语言gc.md)
 
