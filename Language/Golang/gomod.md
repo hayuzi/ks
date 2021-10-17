@@ -44,6 +44,10 @@ go get pkg@version
 go mod dity
 ```
 
+
+#### 1.4 本地调试(修改组件)
+- go.mod新增replace your.domain.com/YourGroup/SubGroup/Project => /path/to/Project
+
  
 
 

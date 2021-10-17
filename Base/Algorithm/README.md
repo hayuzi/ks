@@ -13,5 +13,20 @@
 
 ### 2. 以下内容依次介绍各类算法
 
-- [前缀和算法与差分算法](prefix.md)
-- [差分算法](./go/difference.go)
+- [前缀和算法与差分算法](on/prefixSum.md)
+- [双指针算法](on/towPointer.md)
+- [桶排序](../Sort/sort.php)
+- - 可以看这个文章 https://zhuanlan.zhihu.com/p/164992268
+- [单调栈](on/monostoneStack.md)
+- - 可以参考这个文章 https://zhuanlan.zhihu.com/p/273400551
+- - 应用场景涉及的面比较复杂**待深入**
+- 单调队列(滑动窗口)
+- - 可以看这篇文章了解 https://zhuanlan.zhihu.com/p/107758641
+- BFS/DFS
+- - DFS（Depth First Search）深度优先搜索（使用到递归或者栈辅助）
+- - BFS（Breadth First Search）广度优先搜索 （使用队列辅助）
+- - 常见的有树的遍历或者图的遍历
+- 拓扑排序
+
+
+    
