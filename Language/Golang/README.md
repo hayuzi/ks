@@ -5,6 +5,7 @@ Go语言知识提纲
 > - Go编程语言 http://shouce.jb51.net/gopl-zh/index.html
 > - Go语言设计与实现 https://draveness.me/golang/
 > - Golang标准库中文版 https://studygolang.com/pkgdoc 
+> - Go语言编程之旅   https://golang2.eddycjy.com/
 
 ### 基础语法
 - [基本语法](/Language/Golang/Go01.md)
