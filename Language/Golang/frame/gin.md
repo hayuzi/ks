@@ -194,7 +194,7 @@ func (engine *Engine) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	// 重置Context的信息
 	c.reset()
 
-    // 处理业务流程.该方法内部有很多数据
+    // 处理业务流程, 该方法主要是根据请求匹配路由数据，并调用执行的注册的中间件以及匹配的业务方法
 	engine.handleHTTPRequest(c)
     
     // 用完的*Context放回到pool中
