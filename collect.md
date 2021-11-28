@@ -12,3 +12,9 @@
 - Nginx惊群     https://zhuanlan.zhihu.com/p/88181936
 - RabbitMQ与Kafka https://zhuanlan.zhihu.com/p/161224418
 - java的hashmap https://zhuanlan.zhihu.com/p/380375038
+- Go语言优秀资源整理 https://shockerli.net/post/go-awesome/
+
+
+
+### 论文阅读
+- https://readpaper.com/
