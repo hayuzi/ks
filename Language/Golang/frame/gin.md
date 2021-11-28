@@ -171,7 +171,7 @@ type Context struct {
 
 ### Gin框架使用时候的执行流程
 
-我们通常会先通过封装router方法，来返回*gin.Engine, 并将绑定到给http.Server中的
+我们通常会先通过封装router方法，来返回*gin.Engine, 并绑定到http.Server中
 
 ```
 // 初始化gin引擎， 并获取到返回的*gin.Engines
