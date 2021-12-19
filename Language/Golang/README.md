@@ -18,8 +18,10 @@ Go语言知识提纲
 
 [go mod](/Language/Golang/gomod.md)
 
-### 垃圾回收
+### 内存分配与垃圾回收
 
+- 内存分配
+- [逃逸分析](/Language/Golang/Go逃逸分析.md)
 - [垃圾回收](/Language/Golang/Go语言gc.md)
 
 ### 并发模型
