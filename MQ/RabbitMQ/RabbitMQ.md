@@ -18,14 +18,17 @@ RabbitMQ 便是基于AMQP协议设计的消息队列中间件
 #### RabbitMQ的基本术语
 - Broker：消息队列服务进程，此进程包括两个部分：Exchange和Queue。
 - Exchange：消息队列交换机，按一定的规则将消息路由转发到某个队列，对消息进行过虑。
+    - RoutingKey（路由键）：用于把生成者的数据分配到交换器上
+    - BindingKey（绑定键）：用于把交换器的消息绑定到队列上
 - Queue：消息队列，存储消息的队列，消息到达队列并转发给指定的消费方。
 - Producer：消息生产者，即生产方客户端，生产方客户端将消息发送到MQ。
 - Consumer：消息消费者，即消费方客户端，接收MQ转发的消息。
 #### Exchange说明
-- 常用的交换器主要分为一下三种：
+- 常用的交换器主要分为以下几种：
 - fanout：如果交换器收到消息，将会广播到所有绑定的队列上
 - direct：如果路由键完全匹配，消息就被投递到相应的队列
 - topic：可以使来自不同源头的消息能够到达同一个队列。 使用 topic 交换器时，可以使用通配符
+- headers: **不常用** 它跟上面三种有点区别，它的路由不是用routingKey进行路由匹配，而是在匹配请求头中所带的键值进行路由
 
 #### 传输通道
 - 由于 TCP 连接的创建和销毁开销较大，且并发数受系统资源限制，会造成性能瓶颈。
@@ -78,7 +81,7 @@ RabbitMQ的topic方式下的消息投递机制，topic下路由的 ‘#’ 与 �
 
 #### 信息分布
 - 整个集群中 交换器和队列的元数据在所有节点上是一致的，而Queue的完整数据则只会存在于它所创建的那个节点上
-- 其他节点只知道这个Queue的元数据信息和指向 Queue的woner node的指针
+- 其他节点只知道这个Queue的元数据信息和指向 Queue的owner node的指针
 
 #### 为何仅元数据同步
 - 节省存储空间：每个集群节点都拥有所有Queue的数据完全拷贝，那么空间占用会很严重，消息积压能力会非常弱
@@ -147,8 +150,7 @@ RabbitMQ的topic方式下的消息投递机制，topic下路由的 ‘#’ 与 �
 - 在镜像队列集群模式中，对某个queue来说，只有master对外提供服务，而其他slave只提供备份服务
 - 在master所在节点不可用时，选出一个slave作为新的master继续对外提供服务
 - 无论客户端的请求打到master还是slave最终数据都是从master节点获取
-- 当请求打到master节点时，master节点直接将消息返回给client，同时master节点会通过GM（Guaranteed Multicast）协议
-将queue的最新状态广播到slave节点
+- 当请求打到master节点时，master节点直接将消息返回给client，同时master节点会通过GM（Guaranteed Multicast）协议 将queue的最新状态广播到slave节点
 - GM保证了广播消息的原子性，即要么都更新要么都不更新
 - 当请求打到slave节点时，slave节点需要将请求先重定向到master节点，master节点将将消息返回给client，同时master节点会通过GM协议将queue的最新状态广播到slave节点
 - 所以，多个客户端连接不同的镜像队列不会产生同一message被多次接受的情况
@@ -174,6 +176,7 @@ RabbitMQ的topic方式下的消息投递机制，topic下路由的 ‘#’ 与 �
 
 #### 具体场景
 
+- 
 - 可以参看该文章 https://www.pianshen.com/article/5946333299/
 
 
@@ -181,14 +184,14 @@ RabbitMQ的topic方式下的消息投递机制，topic下路由的 ‘#’ 与 �
 
 ### 维度对比
 
-#### ActiveMQ
+#### ActiveMQ（ 现在很少用了，没有太大的了解必要 ）
 - 单机吞吐 比RabbitMQ低
 - Java 开发， 主要维护者Mozilla/Spring，项目成熟， 社区不太活跃，目前使用者也少了
 - 订阅形式：点对点(p2p)、广播（发布-订阅）
 - 支持少量消息堆积、不支持顺序消息、稳定性好
 - 支持简单集群模式，比如’主-备’，对高级集群模式支持不好。管理界面一般
 
-#### RabbitMQ
+#### RabbitMQ（ 中小企业使用的不少 ）
 - 单机吞吐 2.6w/s（消息做持久化）
 - Erlang 开发， 主要维护者 Apache，项目成熟，社区活跃
 - 提供了4种订阅形式：direct, topic ,Headers和fanout。fanout就是广播模式
@@ -197,7 +200,7 @@ RabbitMQ的topic方式下的消息投递机制，topic下路由的 ‘#’ 与 �
 
 #### RocketMQ
 - 单机吞吐 11.6w/s
-- Java开发， 主要维护者Alibaba，已经转Apache，项目开源版本不够成熟
+- Java开发， 主要维护者Alibaba，已经转Apache
 - 基于topic/messageTag以及按照消息类型、属性进行正则匹配的发布订阅模式
 - 支持大量堆积、支持顺序消息、稳定性一般
 - 常用 多对’Master-Slave’ 模式，开源版本需手动切换Slave变成Master。管理界面一般
@@ -209,6 +212,9 @@ RabbitMQ的topic方式下的消息投递机制，topic下路由的 ‘#’ 与 �
 - 基于topic以及按照topic进行正则匹配的发布订阅模式
 - 支持大量堆积、支持顺序消息、稳定性较差
 - 天然的‘Leader-Slave’无状态集群，每台服务器既是Master也是Slave。无管理界面
+
+#### Pulsar
+
 
 ## 实践问题
 

@@ -43,14 +43,16 @@ Go语言知识提纲
 
 - 《Go编程语言》✅
 - 《go语言编程之旅》✅
-- 《Go并发编程实战》
-- 《Go语言标准库》
-- 《Go语言设计与实现》
+- 《Go语言标准库》... 进行中
+- 《Go并发编程实战》（待定）
+- 《Go语言设计与实现》（原理相关）
 
 > 网页版学习资料
-> - Go编程语言 http://shouce.jb51.net/gopl-zh/index.html
-> - Go语言设计与实现 https://draveness.me/golang/
-> - Golang标准库中文版 https://studygolang.com/pkgdoc
-> - Go语言编程之旅   https://golang2.eddycjy.com/
-> - 一些其他资料 https://github.com/eddycjy/go-developer-roadmap
-> - Go公开课(一些知识点) https://www.jtthink.com/course/play/3362
+- [《Go编程语言》](http://shouce.jb51.net/gopl-zh/index.html)
+- [Golang标准库中文版](https://studygolang.com/pkgdoc)
+- [《Go语言编程之旅》](https://golang2.eddycjy.com)
+- [《Go语言设计与实现》](https://draveness.me/golang)
+- [一些其他资料](https://github.com/eddycjy/go-developer-roadmap)
+- [Go公开课(一些知识点)](https://www.jtthink.com/course/play/3362)
+- [Golang合集](https://www.bilibili.com/video/BV1hv411x7we?p=15)
+- [go-awesome](https://shockerli.net/post/go-awesome)
