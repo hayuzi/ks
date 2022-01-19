@@ -208,7 +208,10 @@ broker的服务模式
 - 包含首领副本的broker在收到生产请求的时候，会对请求做一些验证
     - 发送数据的用户是否有主题的写入权限
     - 请求里包含的acks值是否有效果（0，1，all）
-    - 如果acks=all,是否有足够多的同步副本保证消息已经被安全写入
+        - 0 表示生产者能通过网络把消息发送出去即可
+        - 1 表示首领副本收到消息并把它写入到分区数据文件时会返回确认或者错误响应（不一定同步到磁盘）
+        - 如果acks=all,是否有足够多的同步副本保证消息已经被安全写入
+
 - 之后消息写入本地磁盘**注意文件系统缓存**
     - 在Linux系统上，消息会被写到文件系统缓存里面，并不找正他们何时会被刷新到磁盘上
     - Kafka不会一直等待数据被写到磁盘上----它依赖复制功能来保证消息的持久性
@@ -293,57 +296,77 @@ Kafka基本存储单元是分区。分区无法在多个broker之间进行再戏
 
 #### 4.1 可靠性保证
 
-### 简单的安装使用
+- 分区消息的顺序
+- 只有当消息被写入分区的所有同步副本时（但不一定要写入磁盘），他才被认为是已经提交的
+    - 生产者可以选择接收不同类型的确认，比如在消息被完全提交时候的确认，或者在消息被写入首领副本时的确认，或者在消息被发送到网络时确认
+- 只要还有一个副本是活跃的，那么已经提交的消息就不会丢失
+- 消费者只能读取已经提交的消息
 
-使用docker-compose安装
+#### 4.2 复制
 
-先定义 docker-compose.yml
+- 主题 分区 副本 的复制机制 来保证可靠性
+- 同步副本的认定条件（ 暂不记录 ）
 
-```yaml
-version: '3'
-services:
-  zookeeper:
-    image: wurstmeister/zookeeper
-    ports:
-      - "2181:2181"
-  kafka:
-    image: wurstmeister/kafka
-    depends_on: [ zookeeper ]
-    ports:
-      - "9092:9092"
-    environment:
-      KAFKA_ADVERTISED_HOST_NAME: 172.18.0.3
-      KAFKA_CREATE_TOPICS: "test:1:1"
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-    volumes:
-      - /data/product/zj_bigdata/data/kafka/docker.sock:/var/run/docker.sock
-```
+#### 4.3 配置
 
-在docker-compose.yml文件所在的目录进行服务运行
+- 复制系数
+    - 主题级别是 replication.factor
+    - broker级别是 default.replication.factor 默认是3
+    - 复制系数的权衡
+        - 更大的复制系数带来更高的可用性可靠性，更少的故障，但是占用的磁盘空间会按倍增长
+        - 所以权衡业务的时候要考虑相关的场景均衡
+    - 另外，副本分布也很重要
+        - 机架配置参数 broker.rack
 
-```shell
-docker-compose up -d
-```
+- 不完全的首领选举
+    - unclean.leader.election 默认为true，只能在broker级别配置
+    - 设置为true会允许 不同步副本成为首领（可能会有数据丢失风险）
+    - false不允许 不同步副本成为首领（所有同步副本异常的时候，会导致服务不可用）
+    - 需要根据具体的场景来选择
 
-docker启动之后进行测试，先进入容器内部
+- 最少同步副本
+    - 主题和broker级别上，都是min.insync.replicas
+    - 这个值如果只有1的话，如果此同步副本异常，可能会导致数据异常
+    - 如果当前可用的同步副本数量小于这个值的话，会导致数据不能写入
 
-```shell
-docker exec -it kafka_kafka_1 bash
-```
+#### 4.4 生产者的可靠性
 
-在容器内执行测试
+- 根据可靠性要求配置适当的acks值
+- 配置生产者的重试次数
+    - 生产者可以自动处理的错误和需要开发者手动处理的错误会分开
+    - 可自动处理的，可以通过重试来解决 (注意重试机制可能导致消息重复创建)
+- 额外错误处理
+    - 额外的错误看业务是否需要补偿机制，针对性的做业务架构设计
 
-```shell
-# 创建一个topic
-$KAFKA_HOME/bin/kafka-topics.sh --create --topic test --partitions 4 --zookeeper kafka_zookeeper_1:2181 --replication-factor 1
+#### 4.5 消费者的可靠性
 
-# 查看topic信息
-$KAFKA_HOME/bin/kafka-topics.sh --zookeeper kafka_zookeeper_1:2181 --describe --topic test
+- 偏移量提交
+- 消费者可靠性配置
+    - group.id 消费组机制
+    - auto.offset.reset 指定了没有偏移量可以提交的时候或者请求的偏移量在broker上不窜爱的时候，消费者会做些什么
+        - earliest 分区开头
+        - latest 分区末尾
+    - enable.auto.commit 是否自动提交偏移量
+    - auto.commit.interval.ms 自动提交偏移量的间隔
+- 显式提交偏移量
+    - 处理完再提交
+    - 提交频度是性能和重复消息数量之间的权衡
+    - 确保对提交的偏移量心里有数
+    - 再均衡问题需要考虑
+    - 消费者可能需要重试
+        - 处理异常最好不提交偏移量
+        - 没处理好的数据放入缓冲区，并重试
+        - 遇到可重试错误的时候，可以把错误消息写入一个独立主题，用其他消费者来消费（类似死信）
+    - 消费者可能需要维护状态
+        - 对消息流的多个消息的合并聚合统计等，需要自主去维护，建议使用专业工具或者类库
+    - 长时间处理
+        - 不能完全使用同步阻塞
+        - 最好独立线程处理消息，独立线程维持心跳
+    - 仅一次传递（幂等处理）核心是唯一性标识
 
-# 生产者
-$KAFKA_HOME/bin/kafka-console-producer.sh --topic=test --broker-list kafka_kafka_1:9092
+#### 4.6 验证系统可靠性
 
-## 另开一个进程进入容器执行消费测试
-$KAFKA_HOME/bin/kafka-console-consumer.sh --bootstrap-server kafka_kafka_1:9092 --from-beginning --topic test
+- 配置验证
+- 应用程序验证
+- 生产环境监控
 
-```
