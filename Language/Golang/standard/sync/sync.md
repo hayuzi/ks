@@ -29,14 +29,13 @@ sync.Map的性能高体现在读操作远多于写操作的时候。 极端情�
 
 - [https://zhuanlan.zhihu.com/p/355417981](https://zhuanlan.zhihu.com/p/355417981)
 - [https://zhuanlan.zhihu.com/p/413467399](https://zhuanlan.zhihu.com/p/413467399)
+- [https://zhuanlan.zhihu.com/p/270598980](  https://zhuanlan.zhihu.com/p/270598980)
 
 ### sync.WaitGroup
 
 - 数据结构包含：计数器，等待者个数，信号量
 - add以及Done的语法，基于原子操作（sync/atomic包）实现并发的控制
 - wait通过阻塞当前goroutine等待其他goroutine的执行，完成之后，会重新唤醒当前的goroutine
-
-
 
 ### sync.Mutex 互斥锁
 
