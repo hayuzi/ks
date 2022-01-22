@@ -53,5 +53,6 @@ $KAFKA_HOME/bin/kafka-console-producer.sh --topic=test --broker-list kafka_kafka
 
 ## 另开一个进程进入容器执行消费测试
 $KAFKA_HOME/bin/kafka-console-consumer.sh --bootstrap-server kafka_kafka_1:9092 --from-beginning --topic test
-
 ```
+
+
