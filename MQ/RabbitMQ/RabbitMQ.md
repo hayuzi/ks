@@ -232,8 +232,8 @@ RabbitMQ的topic方式下的消息投递机制，topic下路由的 ‘#’ 与 �
 - 单机吞吐 11.6w/s
 - Java开发， 主要维护者Alibaba，已经转Apache
 - 基于topic/messageTag以及按照消息类型、属性进行正则匹配的发布订阅模式
-- 支持大量堆积、支持顺序消息、稳定性一般
-- 常用 多对’Master-Slave’ 模式，开源版本需手动切换Slave变成Master。管理界面一般
+- 支持大量堆积、支持顺序消息
+- 常用 多对’Master-Slave’ 模式，开源版本需手动切换Slave变成Master
 
 #### Kafka
 
@@ -245,6 +245,9 @@ RabbitMQ的topic方式下的消息投递机制，topic下路由的 ‘#’ 与 �
 - 天然的‘Leader-Slave’无状态集群，每台服务器既是Master也是Slave。无管理界面
 
 #### Pulsar
+
+- 计算和存储分离的架构，数据分层存储，便于快速的扩缩容，并且可以针对计算或者存储分别扩容
+- 多种消费模式，兼有消息流平台以及消息队列的特性
 
 ## 实践问题
 
