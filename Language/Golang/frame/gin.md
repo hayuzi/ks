@@ -1,20 +1,18 @@
 Gin框架原理分析
 ==
 
-## 1. 简介
-
-### 1.1 Gin框架的核心功能
+### 1. Gin框架的核心功能
 
 Gin框架主要有三个核心功能：
+
 - 路由管理与处理映射
 - 中间件功能
 - 请求数据预处理和上下文流控管理
 
-
-请求数据预处理我们这里先跳过不讲，只分析框架的基础流程。这个涉及到两个核心结构体。
-一个是全局的 gin.Engine 还有一个 gin.Context
+请求数据预处理我们这里先跳过不讲，只分析框架的基础流程。这个涉及到两个核心结构体。 一个是全局的 gin.Engine 还有一个 gin.Context
 
 在业务使用中，我们大概有这么一个流程
+
 - 使用的时候，我们会生成一个全局唯一的 gin.Engine 结构，并保存指针
 - 在 *gin.Engine上面注册中间件与路由以及业务处理方法
 - 所有的处理方法都接收一个 *gin.Context 参数（ 包括中间件与业务函数 ）
@@ -23,7 +21,7 @@ Gin框架主要有三个核心功能：
 
 下面简单分析这两个结构体
 
-#### 1.1.1 基础引擎gin.Engine
+#### 1.1 基础引擎gin.Engine
 
 ```
 type Engine struct {
@@ -122,7 +120,7 @@ type Engine struct {
 }
 ```
 
-#### 上下文信息gin.Context
+#### 1.2 上下文信息gin.Context
 
 ```
 type Context struct {
@@ -169,7 +167,7 @@ type Context struct {
 }
 ```
 
-### Gin框架使用时候的执行流程
+### 2. Gin框架使用时候的执行流程
 
 我们通常会先通过封装router方法，来返回*gin.Engine, 并绑定到http.Server中
 
@@ -222,7 +220,7 @@ func (engine *Engine) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 
 c.Next 方法我们在后面再分析，此处先看一下路由与中间件注入的逻辑
 
-### Gin框架的路由实现
+### 3. Gin框架的路由实现
 
 我们通过Use方法注册中间件。 通过源码追踪分析，我们可以知道，Gin框架通过 Use方法，将中间件执行方法挂载到路由分组上。
 
@@ -294,9 +292,9 @@ func (engine *Engine) addRoute(method, path string, handlers HandlersChain) {
 
 Tree整体结构是一个前缀树, 字典树的一种
 
-Tree中的 node的具体结构如下
+Tree中的 node的具体结构如下:
 > 参考 https://segmentfault.com/a/1190000016655709
->    这其中包括整体的路由树形结构的实例展示
+> 这其中包括整体的路由树形结构的实例展示
 
 ```
 type node struct {
@@ -311,10 +309,10 @@ type node struct {
 }
 ```
 
-path 和 indices 关于 path 和 indices，其实是使用了前缀树的逻辑。
+其中 path 和 indices，使用了前缀树的逻辑。
 
-举个栗子： 如果我们有两个路由，分别是 /index，/inter，则根节点为 {path: "/in", indices: "dt"...}，两个子节点为{path: "dex", indices: ""}，{path: "ter",
-indices: ""} nType Gin 中定义了四种节点类型：
+举个例子： 如果我们有两个路由，分别是 /index，/inter， 则根节点为 {path: "/in", indices: "dt"...}，这里面的indices对应的值 dt 是"dex", "ter"的首个字符组合的
+两个children子节点为 {path: "dex", indices: ""}，{path: "ter",indices: ""} ，正好对应 d 以及 t 的索引位置
 
 ```
 const (
@@ -407,6 +405,7 @@ walk:
 			}
 
 			// Otherwise insert it
+			// 这里都是处理":"以及"*"的相关逻辑
 			if c != ':' && c != '*' && n.nType != catchAll {
 				// []byte for proper unicode char conversion, see #65
 				n.indices += bytesconv.BytesToString([]byte{c})
@@ -448,6 +447,7 @@ walk:
 		}
 
 		// Otherwise add handle to current node
+		// 如果在当前节点上重复追加处理方法，则有问题 pinc掉
 		if n.handlers != nil {
 			panic("handlers are already registered for path '" + fullPath + "'")
 		}
@@ -459,15 +459,16 @@ walk:
 
 ```
 
-### Gin框架中间件原理实现
+### 4. Gin框架中间件原理实现
 
 我们前面看到的 路由树节点上的处理函数（handlers HandlersChain），一般来说，除了最后一个函数，前面的函数被称为中间件。
 
 这个与之前的中间件注册的功能匹配上了。
 
-#### 中间件的执行
+#### 4.1 中间件的执行
 
 业务处理函数的执行，框架是通过 Next方法来执行的（整体的洋葱模型主要是因为触发 next会调用下一个处理函数. 调用按照顺序，但是在Next之后程序段的执行是个反顺序的过程 ）
+
 ```
 // Next should be used only inside middleware.
 // It executes the pending handlers in the chain inside the calling handler.
@@ -494,7 +495,6 @@ func (c *Context) Abort() {
 
 ```
 
+### 5. 其他关联
 
-### 其他功能
-
-其中涉及到 sync.Pool, 对象池 值得深入了解
+context 的 生成使用，其中涉及到 sync.Pool, 对象池，如果有兴趣的话，可以自行去了解
